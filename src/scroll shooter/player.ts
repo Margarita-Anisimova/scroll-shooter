@@ -1,15 +1,24 @@
 import { Spine } from 'pixi-spine';
-import { Rectangle } from 'pixi.js-legacy';
 
 export default class Player {
 
     public player: Spine;
     public isJumping: boolean;
     public rect: PIXI.Sprite;
+    public lives: PIXI.Sprite[] = [];
+    public livesNumber: number = 5;
 
     constructor() {
         this.createBoy();
         this.isJumping = false;
+        for (let i = 0; i < 5; i++) {
+            let r = new PIXI.Sprite(PIXI.Texture.WHITE);
+            r.width = 50;
+            r.height = 50;
+            r.x = i * 52
+            this.lives.push(r);
+            window.app.stage.addChild(r);
+        }
 
     }
 
@@ -31,10 +40,10 @@ export default class Player {
                 }
 
                 let rect = new PIXI.Sprite(PIXI.Texture.WHITE);
-                rect.x = this.player.x - this.player.width / 2;
+                rect.x = this.player.x - this.player.width / 2 + 50;
                 rect.y = this.player.y - this.player.height;
-                rect.width = this.player.width;
-                rect.height = this.player.height;
+                rect.width = this.player.width - 100;
+                rect.height = this.player.height - 150;
                 this.rect = rect
                 window.app.stage.addChild(rect)
                 window.app.stage.addChild(animation)
