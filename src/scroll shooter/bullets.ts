@@ -9,7 +9,8 @@ export default class Bullets {
     constructor(game: Game) {
         this.game = game;
         for (let i = 0; i < 5; i++) {
-            let e = new PIXI.Sprite(PIXI.Texture.WHITE);
+            let t = PIXI.Texture.from('assets/пуля.png');
+            let e = new PIXI.Sprite(t);
             e.width = 50;
             e.height = 50;
             e.x = 0;

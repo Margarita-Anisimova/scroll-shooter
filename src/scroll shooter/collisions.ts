@@ -9,7 +9,7 @@ export default class Collisions {
 
     }
 
-    static checkCollision(obj1: PIXI.Sprite, obj2: PIXI.Sprite) {
+    static checkCollision(obj1: PIXI.Sprite | PIXI.Container, obj2: PIXI.Sprite | PIXI.Container) {
         return obj1.x < obj2.x + obj2.width
             && obj1.x + obj1.width > obj2.x
             && obj1.y < obj2.y + obj2.height
