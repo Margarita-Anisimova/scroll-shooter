@@ -13,7 +13,7 @@ export default class Tween {
     /**
      * Массив контролов у которых будут изменяться параметры
      */
-    controls: DisplayObject[];
+    controls: (DisplayObject | PIXI.ObservablePoint)[];
     /**
      * Запущен ли твин
      */
@@ -62,7 +62,7 @@ export default class Tween {
      * Добавить контрол в набор, которыми будем манипулировать
      * @param c объект, который добавляем
      */
-    addControl(c: DisplayObject): Tween {
+    addControl(c: DisplayObject | PIXI.ObservablePoint): Tween {
         this.controls.push(c);
         return this;
     }

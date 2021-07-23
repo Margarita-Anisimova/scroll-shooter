@@ -1,33 +1,31 @@
 import Game from "./game";
 import Enemy from "./Enemy";
 import { Spine } from 'pixi-spine';
-import { Container } from "pixi.js-legacy";
 
 
 export default class Enemies {
 
-    public enemies: Enemy[] = [];
-    public enemiesInField: Enemy[] = [];
-    public ind: number = -1;
-    public game: Game;
+    public inField: Enemy[] = [];
 
-    constructor(game: Game, dr: Spine) {
+    private enemies: Enemy[] = [];
+    private ind: number = -1;
+    private game: Game;
 
+    constructor(game: Game, dragon: Spine) {
         this.game = game;
         for (let i = 0; i < 3; i++) {
-
-            this.enemies.push(new Enemy(this.game, dr));
+            this.enemies.push(new Enemy(this.game, dragon));
         }
     }
 
-    currentBox(): Enemy {
-        return this.enemiesInField[0];
+    current(): Enemy {
+        return this.inField[0];
     }
 
     newEnen() {
         this.ind = this.ind === 2 ? 0 : this.ind + 1;
-        this.enemiesInField.push(this.enemies[this.ind]);
-        this.enemies[this.ind].new()
+        this.inField.push(this.enemies[this.ind]);
+        this.enemies[this.ind].start();
 
     }
 }
