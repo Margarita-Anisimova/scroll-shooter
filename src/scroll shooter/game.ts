@@ -80,16 +80,7 @@ export default class Game {
 
     startButtonClick() {
         if (!this.isGameStart) {
-            this.backgroundTween = new Tween().addControl(this.background.tilePosition)
-                .do({ x: [this.background.tilePosition.x, this.background.tilePosition.x - 1000] })
-            this.isGameStart = true;
-            this.player.livesCont.visible = true;
-            this.playerJumping = false;
-            this.player.lives.forEach((e) => e.visible = true);
-            this.player.player.visible = true;
-            this.player.player.state.setAnimation(0, 'portal', false).mixDuration = 0.2;
-            this.player.player.state.timeScale = 0.8;
-
+            this.start();
             let callback = this.newGame.bind(this)
 
             this.player.player.state.tracks[0].listener = {
@@ -107,6 +98,18 @@ export default class Game {
             this.gameOver();
             this.startButtonClick();
         }
+    }
+
+    start() {
+        this.backgroundTween = new Tween().addControl(this.background.tilePosition)
+            .do({ x: [this.background.tilePosition.x, this.background.tilePosition.x - 1000] })
+        this.isGameStart = true;
+        this.player.livesCont.visible = true;
+        this.playerJumping = false;
+        this.player.lives.forEach((e) => e.visible = true);
+        this.player.player.visible = true;
+        this.player.player.state.setAnimation(0, 'portal', false).mixDuration = 0.2;
+        this.player.player.state.timeScale = 0.8;
     }
 
     gameOver() {
