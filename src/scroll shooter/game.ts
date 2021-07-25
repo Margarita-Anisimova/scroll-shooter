@@ -16,6 +16,7 @@ export default class Game {
     public tweens: Tween[];
     public isBul: boolean = false;
     public loader: Loader;
+    private animCollisionTween: Tween;
 
 
     private bx: PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -54,6 +55,9 @@ export default class Game {
 
     makeTicker() {
         window.app.ticker.add(() => {
+            if (this.animCollisionTween) {
+                this.animCollisionTween.update(window.app.ticker.elapsedMS)
+            }
             if (this.isGameStart) {
                 //можно ли такой способ считать нормальным для проверки смены вкладки?
                 if (window.app.ticker.elapsedMS < 18) {
@@ -161,14 +165,18 @@ export default class Game {
             else {
 
                 if (this.boxes.inField.length && Collisions.checkCollision(this.player.hitbox, this.boxes.current())) {
+                    this.animCollision(this.boxes.current())
                     this.сollision(this.boxes);
+
                 }
                 if (this.enemies.inField.length && Collisions.checkCollision(this.player.hitbox, this.enemies.current().hitbox)) {
-                    this.enemies.current().enemy.visible = false;
+                    this.enemies.current().hitbox.visible = false;
+                    this.animCollision(this.enemies.current().enemy)
                     this.сollision(this.enemies);
                 }
                 if (this.bullets.inField.length && this.enemies.inField.length && Collisions.checkCollision(this.enemies.current().hitbox, this.bullets.current())) {
-                    this.enemies.current().enemy.visible = false;
+                    this.enemies.current().hitbox.visible = false;
+                    this.animCollision(this.enemies.current().enemy)
                     this.сollision(this.enemies, this.bullets);
                 }
                 //чтобы не было багов с камнем и преждевременного  this.boxes.inField.shift();
@@ -179,8 +187,14 @@ export default class Game {
         }
     }
 
+    animCollision(obj: PIXI.Sprite | Spine) {
+        this.animCollisionTween = new Tween().addControl(obj).do({ alpha: [1, 0] }).start(200, () => {
+            obj.visible = false;
+            obj.alpha = 1;
+        }, 1)
+    }
+
     сollision(obj1: Boxes | Enemies, obj2: Bullets | null = null) {
-        obj1.current().visible = false;
         obj1.inField.shift();
         if (obj2) {
             obj2.current().visible = false;

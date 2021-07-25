@@ -7,11 +7,11 @@ export default class Enemy {
     public game: Game;
 
     get visible() {
-        return this.hitbox.visible;
+        return this.enemy.visible;
     }
 
     set visible(val) {
-        this.hitbox.visible = val;
+        this.enemy.visible = val;
     }
 
     constructor(game: Game, dragon: Spine) {
