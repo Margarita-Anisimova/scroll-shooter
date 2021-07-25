@@ -33,14 +33,17 @@ export default class Boxes {
     newBox() {
         this.ind = this.ind === 2 ? 0 : this.ind + 1;
         this.boxes[this.ind].visible = true;
-        this.inField.push(this.boxes[this.ind]);
         let r = this.game.addTween().addControl(this.boxes[this.ind])
             .do({ x: [window.sceneWidth, -190] })
-        r.start(2900,
-            () => {
-                if (this.inField.includes(r.controls[0]))
-                    this.inField.shift()
-            }, 1);
+        r.start(2900, undefined, 1)
+        // () => {
+        //     if (this.inField.includes(r.controls[0])) {
+        //         let rw = this.inField.shift()
+        //         console.log(rw.x)
+        //     }
+
+        // }, 1);
+        this.inField.push(this.boxes[this.ind]);
     }
 
 

@@ -17,6 +17,9 @@ export default class Game {
     public isBul: boolean = false;
     public loader: Loader;
 
+
+    private bx: PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+
     private backgroundTween: Tween;
     private btn: PIXI.Sprite;
     private isGameStart: boolean = false;
@@ -29,6 +32,10 @@ export default class Game {
 
         this.background = this.makeBackground();
 
+        this.bx.width = 190;
+        this.bx.height = 190;
+        this.bx.x = 70;
+        this.bx.y = 580
 
         this.btn = this.makeStartBtn();
 
@@ -48,17 +55,17 @@ export default class Game {
     makeTicker() {
         window.app.ticker.add(() => {
             if (this.isGameStart) {
-                this.backgroundTween.update(window.app.ticker.elapsedMS)
-                for (let i = 0; i < this.tweens.length; i++) {
-                    if (this.tweens[i].controls[0].visible && !this.tweens[i].finished)
+                //можно ли такой способ считать нормальным для проверки смены вкладки?
+                if (window.app.ticker.elapsedMS < 18) {
+                    this.backgroundTween.update(window.app.ticker.elapsedMS)
+                    for (let i = 0; i < this.tweens.length; i++) {
                         this.tweens[i].update(window.app.ticker.elapsedMS);
-                    else {
-                        this.tweens.splice(i, 1);
-                    }
-                    if (this.isGameStart) {
-                        this.checkСollision();
-                    }
-                };
+                        if (this.tweens[i].finished || !this.tweens[i].controls[0].visible) {
+                            this.tweens.splice(i, 1);
+                        }
+                        // this.checkСollision();
+                    };
+                }
             }
 
         })
@@ -104,6 +111,13 @@ export default class Game {
         this.backgroundTween = new Tween().addControl(this.background.tilePosition)
             .do({ x: [this.background.tilePosition.x, this.background.tilePosition.x - 1000] })
         this.isGameStart = true;
+
+        this.timerCollisions = setInterval(() => {
+            if (window.app.ticker.elapsedMS < 18) {
+                this.checkСollision();
+            }
+        }, 100);
+
         this.player.livesCont.visible = true;
         this.playerJumping = false;
         this.player.lives.forEach((e) => e.visible = true);
@@ -141,13 +155,11 @@ export default class Game {
 
     checkСollision() {
         if (this.isGameStart) {
-            if (this.boxes.current() && this.boxes.current().x + this.boxes.current().width < this.player.hitbox.x) {
-                this.boxes.inField.shift()
-            }
             if (this.player.livesNumber === 0) {
                 this.gameOver();
             }
             else {
+
                 if (this.boxes.inField.length && Collisions.checkCollision(this.player.hitbox, this.boxes.current())) {
                     this.сollision(this.boxes);
                 }
@@ -158,7 +170,10 @@ export default class Game {
                 if (this.bullets.inField.length && this.enemies.inField.length && Collisions.checkCollision(this.enemies.current().hitbox, this.bullets.current())) {
                     this.enemies.current().enemy.visible = false;
                     this.сollision(this.enemies, this.bullets);
-
+                }
+                //чтобы не было багов с камнем и преждевременного  this.boxes.inField.shift();
+                if (this.boxes.inField.length && Collisions.checkCollision(this.boxes.current(), this.bx)) {
+                    this.boxes.inField.shift();
                 }
             }
         }
