@@ -16,11 +16,9 @@ export default class Game {
     public tweens: Tween[];
     public isBul: boolean = false;
     public loader: Loader;
+
     private animCollisionTween: Tween;
-
-
     private bx: PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-
     private backgroundTween: Tween;
     private btn: PIXI.Sprite;
     private isGameStart: boolean = false;
@@ -60,7 +58,7 @@ export default class Game {
             }
             if (this.isGameStart) {
                 //можно ли такой способ считать нормальным для проверки смены вкладки?
-                if (window.app.ticker.elapsedMS < 18) {
+                if (window.app.ticker.elapsedMS < 50) {
                     this.backgroundTween.update(window.app.ticker.elapsedMS)
                     for (let i = 0; i < this.tweens.length; i++) {
                         this.tweens[i].update(window.app.ticker.elapsedMS);
@@ -117,7 +115,7 @@ export default class Game {
         this.isGameStart = true;
 
         this.timerCollisions = setInterval(() => {
-            if (window.app.ticker.elapsedMS < 18) {
+            if (window.app.ticker.elapsedMS < 50) {
                 this.checkСollision();
             }
         }, 100);
@@ -258,6 +256,5 @@ export default class Game {
         r.scale.set(1.2, 1.2);
         window.app.stage.addChild(r);
         return r;
-
     }
 }
